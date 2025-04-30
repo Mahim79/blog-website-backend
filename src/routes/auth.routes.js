@@ -2,6 +2,7 @@
 
 const forgotPassword = require("../controllers/auth/forgotpass.controller");
 const { login } = require("../controllers/auth/login.controller");
+const { logoutController } = require("../controllers/auth/logout.controller");
 const setNewPassword = require("../controllers/auth/newpassword.controllet");
 const { register } = require("../controllers/auth/register.controller");
 const emailVerifyController = require("../controllers/auth/verify.controller");
@@ -22,6 +23,9 @@ router.post("/forgotpass", forgotPassword)
 
 //reset password
 router.post("/newpass/:id", setNewPassword)
+
+// Logout User
+router.post("/logout", logoutController);
 
 
 module.exports = router;

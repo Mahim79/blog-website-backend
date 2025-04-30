@@ -25,6 +25,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", require("./src/routes/auth.routes"));
+app.use("/api/user", require("./src/routes/user.routes"));
 
 
 // ✅ Handle 404 errors

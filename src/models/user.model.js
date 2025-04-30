@@ -50,7 +50,12 @@ const userSchema = new Schema({
     isVerified: {
         type: Boolean,
         default: false
-    }
+    },
+    status: {
+        type: String,
+        enum: ['approve', 'suspend'],
+        default: 'approve'
+    },
 
 }, {
     timestamps: true,
