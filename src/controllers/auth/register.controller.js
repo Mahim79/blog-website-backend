@@ -1,5 +1,5 @@
 const User = require('../../models/user.model');
-const bcrypt = require('bcryptjs');
+
 const { sendEmail } = require('../../utils/nodemailer.config');
 
 
@@ -9,8 +9,6 @@ exports.register = async (req, res) => {
 
         const { firstName, lastName, username, email, password } = req.body;
 
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
         // Check if the user already exists
         const existingUser = await User.findOne({ email });
         if (existingUser) {
@@ -26,11 +24,11 @@ exports.register = async (req, res) => {
         // console.log(verificationCode)
 
         // Create a new user
-        const newUser = new User({ firstName, lastName, username, email, password: hashedPassword, verificationCode });
+        const newUser = new User({ firstName, lastName, username, email, password, verificationCode });
         await newUser.save();
         // Send verification email (you can use a service like Nodemailer for this)
 
-        await sendEmail(newUser.email,newUser.username, verificationCode);
+        await sendEmail(newUser.email, newUser.username, verificationCode);
         console.log('Verification email sent to:', email);
 
         res.status(201).json({

@@ -1,48 +1,46 @@
 const mongoose = require('mongoose');
-const { Schema, model, Types } = mongoose;
+const bcrypt = require('bcrypt');
+const { Schema, model } = mongoose;
 
-const blogSchema = new Schema(
-    {
-        title: {
-            type: String,
-            required: true,
-            trim: true,
-        },
-        content: {
-            type: String,
-            required: true,
-        },
-        image: {
-            type: String,
-            default: 'https://res.cloudinary.com/dutnq2gdm/image/upload/v1746035574/placeholder-img_wocdc7.webp',
-        },
-        category: {
-            type: String,
-            required: true,
-            enum: [
-                'technology', 'health', 'lifestyle', 'education', 'business',
-                'travel', 'food', 'fashion', 'sports', 'entertainment', 'finance',
-                'politics', 'science', 'art', 'history', 'music',
-                'photography', 'gaming', 'books', 'movies', 'tv shows',
-            ],
-            default: 'technology',
-        },
-        author: {
-            type: Types.ObjectId,
-            ref: 'User',
-            required: true,
-        },
-        tags: {
-            type: [String],
-            default: [],
-        },
+const userSchema = new Schema({
+    firstName: { type: String, required: true, trim: true },
+    lastName: { type: String, required: true, trim: true },
+    username: { type: String, required: true, unique: true, trim: true },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
     },
-    {
-        timestamps: true,
-        versionKey: false,
-    }
-);
+    password: { type: String, required: true },
+    role: { type: String, enum: ['user', 'admin'], default: 'user' },
+    profilePicture: {
+        type: String,
+        default: 'https://res.cloudinary.com/dutnq2gdm/image/upload/v1745864054/user-1699635_640_mgcjmz.png'
+    },
+    bio: { type: String, default: 'This is my bio' },
+    phoneNumber: { type: String, default: null },
+    verificationCode: { type: String, default: null },
+    isVerified: { type: Boolean, default: false },
+    status: { type: String, enum: ['approve', 'suspend'], default: 'approve' },
+    resetToken: { type: String, default: null },
+    resetTokenExpiry: { type: Date, default: null }
+}, {
+    timestamps: true,
+    versionKey: false
+});
 
-const Blog = model('Blog', blogSchema);
+// Virtual for full name
+userSchema.virtual('fullName').get(function () {
+    return `${this.firstName} ${this.lastName}`;
+});
 
-module.exports = Blog;
+// Hash password
+userSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) return next();
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
+});
+
+module.exports = model('User', userSchema);
