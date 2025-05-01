@@ -5,8 +5,7 @@ const likeSchema = new Schema({
     user: { type: Types.ObjectId, ref: 'User', required: true },
     blog: { type: Types.ObjectId, ref: 'Blog', required: true, index: true },
     action: {
-        type: String,
-        enum: ['like', 'dislike'],
+        type: Boolean,
         required: true
     }
 }, {

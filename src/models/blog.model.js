@@ -1,46 +1,32 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const { Schema, model } = mongoose;
+const { Schema, model, Types } = mongoose;
 
-const userSchema = new Schema({
-    firstName: { type: String, required: true, trim: true },
-    lastName: { type: String, required: true, trim: true },
-    username: { type: String, required: true, unique: true, trim: true },
-    email: {
+const blogSchema = new Schema({
+    title: { type: String, required: true, trim: true },
+    content: { type: String, required: true, trim: true },
+    image: {
+        type: String,
+        default: 'https://res.cloudinary.com/dutnq2gdm/image/upload/v1746035574/placeholder-img_wocdc7.webp'
+    },
+    summary: { type: String, trim: true },
+    category: {
         type: String,
         required: true,
-        unique: true,
-        trim: true,
-        match: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
+        enum: [
+            'technology', 'health', 'lifestyle', 'education', 'business',
+            'travel', 'food', 'fashion', 'sports', 'entertainment', 'finance',
+            'politics', 'science', 'art', 'history', 'music',
+            'photography', 'gaming', 'books', 'movies', 'tv shows'
+        ],
+        default: 'technology'
     },
-    password: { type: String, required: true },
-    role: { type: String, enum: ['user', 'admin'], default: 'user' },
-    profilePicture: {
-        type: String,
-        default: 'https://res.cloudinary.com/dutnq2gdm/image/upload/v1745864054/user-1699635_640_mgcjmz.png'
-    },
-    bio: { type: String, default: 'This is my bio' },
-    phoneNumber: { type: String, default: null },
-    verificationCode: { type: String, default: null },
-    isVerified: { type: Boolean, default: false },
-    status: { type: String, enum: ['approve', 'suspend'], default: 'approve' },
-    resetToken: { type: String, default: null },
-    resetTokenExpiry: { type: Date, default: null }
+    author: { type: Types.ObjectId, ref: 'User', required: true, index: true },
+    tags: { type: [String], default: [] },
+    views: { type: Number, default: 0 },
+    isDeleted: { type: Boolean, default: false }
 }, {
     timestamps: true,
     versionKey: false
 });
 
-// Virtual for full name
-userSchema.virtual('fullName').get(function () {
-    return `${this.firstName} ${this.lastName}`;
-});
-
-// Hash password
-userSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) return next();
-    this.password = await bcrypt.hash(this.password, 10);
-    next();
-});
-
-module.exports = model('User', userSchema);
+module.exports = model('Blog', blogSchema);
