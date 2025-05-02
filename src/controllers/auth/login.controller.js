@@ -5,6 +5,9 @@ const bcrypt = require('bcryptjs');
 // Secret key for JWT
 const secretKey = process.env.SECRET_KEY;
 
+// expires time for JWT
+const expiresIn = process.env.EXPIRES_IN;
+console.log(expiresIn)
 
 
 
@@ -17,7 +20,7 @@ exports.login = async (req, res) => {
         if (!identifier || !password) {
             return res.status(400).json({ message: 'Email/Username and password are required' });
         }
-        
+
 
         // Find the user by username
         const user = await User.findOne({
@@ -40,7 +43,7 @@ exports.login = async (req, res) => {
         const { _id, role } = user;
 
         // Generate a JWT token
-        const token = jwt.sign({ _id, username, email, role }, secretKey, { expiresIn: '1d' });
+        const token = jwt.sign({ _id, username, email, role }, secretKey, { expiresIn: expiresIn });
 
         res.status(200).json({ message: 'Login successful', token });
     } catch (error) {
