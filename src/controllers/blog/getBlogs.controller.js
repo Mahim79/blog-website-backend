@@ -79,15 +79,6 @@ const getBlogsByAuthor = async (req, res) => {
     }
 }
 
-// Controller to get a blogs with comments and likes
-const getBlogsWithCommentsAndLikes = async (req, res) => {
-    try {
-        const blogs = await Blog.find({ isDeleted: false }).populate('comments').populate('likes');
-        res.status(200).json({ success: true, data: blogs });
-    } catch (error) {
-        res.status(500).json({ success: false, message: 'Server Error', error: error.message });
-    }
-};
 
 
 // Controller to get a single blog by ID
@@ -108,25 +99,6 @@ const getSingleBlog = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server Error', error: error.message });
     }
 };
-// Controller to get a single blog by ID with comments and likes
-const getSingleBlogWithCommentsAndLikes = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const blog = await Blog.findById(id).populate('comments').populate('likes');
-
-        if (!blog) {
-            return res.status(404).json({ success: false, message: 'Blog not found' });
-        }
-        if (blog.isDeleted) {
-            return res.status(404).json({ success: false, message: 'Blog not found' });
-        }
-
-        res.status(200).json({ success: true, data: blog });
-    }
-    catch (error) {
-        res.status(500).json({ success: false, message: 'Server Error', error: error.message });
-    }
-}
 
 //controller to get most liked blogs
 const getPopularBlogs = async (req, res) => {
@@ -188,9 +160,8 @@ module.exports = {
     getBlogsByCategory,
     getBlogsByAuthor,
     
-    getBlogsWithCommentsAndLikes,
     getSingleBlog,
-    getSingleBlogWithCommentsAndLikes,
+    
     getPopularBlogs,
     getAllCategories
 

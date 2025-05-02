@@ -1,13 +1,16 @@
 const express = require('express');
-const { userUpdateController } = require('../controllers/user/userUpdate.controller');
+const { userUpdateController, userSuspendController } = require('../controllers/user/userUpdate.controller');
 const { authenticate } = require('../middlewares/verifyJWT.middleware');
 const { checkBlacklistToken } = require('../middlewares/blacklistToken.middleware');
 const userDeleteController = require('../controllers/user/userDelete.controller');
+const adminOnly = require('../middlewares/admin.middleware');
 
 const router = express.Router();
 
 // Update user route
 router.put('/update/:id', checkBlacklistToken, authenticate, userUpdateController);
+//suspend user route
+router.put('/suspend/:id', checkBlacklistToken, authenticate, adminOnly, userSuspendController);
 
 // Delete user route
 router.delete('/delete/:id', checkBlacklistToken, authenticate, userDeleteController);

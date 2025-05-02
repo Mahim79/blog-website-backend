@@ -49,6 +49,40 @@ exports.userUpdateController = async (req, res) => {
 
 }
 
+exports.userSuspendController = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { isSuspended } = req.body;
+
+        // Find the user by ID and update their information
+        const user = await User.findByIdAndUpdate(id, {
+            status: isSuspended 
+        }, { new: true })
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({
+            message: "User suspended successfully",
+            user: {
+                id: user._id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                profilePicture: user.profilePicture,
+                bio: user.bio,
+                status: user.status
+            }
+        });
+
+    }
+    catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+
+}
+
 
 
 
