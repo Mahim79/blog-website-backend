@@ -13,16 +13,65 @@ https://ic-blog-api.vercel.app
 ## 🔐 Authentication
 
 ### Register
+
 ```http
 POST /api/auth/register
+{
+  "firstName": "Shofikul",
+  "lastName": "Islam",
+  "username": "shofiq3",
+  "email": "crshofik3@gmail.com",
+  "password": "11111111"
+}
+
+
+```
+
+### Email Verify
+
+```http
+POST /api/auth/verify/{user-id}
+
+{
+    "token":"350099"
+}
 ```
 
 ### Login
+
 ```http
 POST /api/auth/login
+
+{
+    "username":"shofiq3",
+    "password":"11111111"
+}
+```
+
+### Forgot Password
+
+```http
+POST /api/auth/forgotpass
+
+{
+    "email":"crshofik3@gmail.com"
+
+}
+```
+
+### Forgot Password
+
+```http
+POST /api/auth/newpass/{user-id}
+
+{
+    "newPassword":"11111111",
+    "confirmPassword":"11111111"
+}
 ```
 
 ### Logout
+
 ```http
 POST /api/auth/logout
 ```
@@ -34,48 +83,69 @@ POST /api/auth/logout
 ## 📂 Categories
 
 ### List all categories
+
 ```http
 GET /api/blog/categories
 ```
-
 
 ---
 
 ## 📝 Get Blogs API
 
-
 ### Get a single Blog
+
 ```http
 GET /api/blog/single-blog/{id}
 ```
+
 ### Get a all Blog
+
 ```http
 GET /api/blog/all-blog
 ```
+
 ### Get a all Blog with pagination
+
 ```http
 GET /api/blog/all-blog/pagination?page={page-number}&limit={total-blog}
 ```
+
 ### Get Blogs with category
+
 ```http
 GET /api/blog/category/{category-name}
 ```
+
 ### Get Popular Blogs
+
 ```http
 GET /api/blog/popular-blogs
 ```
 
-### Update a post
+### Update a Blog
+
 ```http
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
 PUT /api/blog/update/{id}
 ```
 
 ### soft delete a Blog (User Only)
+
 ```http
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
 PUT /api/blog/soft-delete/{id}
 ```
+
 ### Delete a Blog (Admin Only)
+
 ```http
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
 DELETE /api/blog/delete/{id}
 ```
 
@@ -84,7 +154,11 @@ DELETE /api/blog/delete/{id}
 ## 👤 Users
 
 ### Update User
+
 ```http
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
 PUT /api/user/update/{user-id}
 {
     "firstName":"aaaaa",
@@ -97,18 +171,32 @@ PUT /api/user/update/{user-id}
 ```
 
 ### Delete user
+
 ```http
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
 DELETE /api/user/delete/{user-id}
 ```
+
 ### SUSPEND user (Admin Only)
+
 ```http
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
 PUT /api/user/suspend/{user-id}
 {
     "isSuspended":"suspend"
 }
 ```
+
 ### APPROVE user (Admin Only)
+
 ```http
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
 PUT /api/user/suspend/{user-id}
 {
     "isSuspended":"approve"
@@ -138,7 +226,11 @@ Content-Type: application/json
 ## Comment
 
 ### Create Comment on a Post
+
 ```http
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
 POST /api/comment/post-comment/{blog-id}
 
 {
@@ -147,22 +239,28 @@ POST /api/comment/post-comment/{blog-id}
 }
 ```
 
-### Delete Comment on a Post (user)
-```http
-PUT /api/comment/soft-delete-comment/{blog-id}
-
-```
 ### Delete Comment on a Post (Admin Only)
+
 ```http
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
 PUT /api/comment/delete-comment/{blog-id}
 
 ```
+
 ### Delete Comment on a Post (user)
+
 ```http
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
 PUT /api/comment/soft-delete-comment/{blog-id}
 
 ```
+
 ### Get Comments by Blog ID
+
 ```http
 GET /api/comment/get-comments/{blog-id}
 
@@ -171,18 +269,21 @@ GET /api/comment/get-comments/{blog-id}
 ## Like
 
 ### Add and Remove like on a Blog
+
 ```http
+Authorization: Bearer YOUR_TOKEN_HERE
+Content-Type: application/json
+
 POST /api/like/{blog-id}
 
 ```
 
-
 ### Get Total Likes by BlogID
+
 ```http
 GET /api/like/{blog-id}
 
 ```
-
 
 ## 📄 License
 
