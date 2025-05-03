@@ -32,10 +32,10 @@ const setNewPassword = async (req, res) => {
         }
 
         //hash the new password before saving
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        // const hashedPassword = await bcrypt.hash(newPassword, 10);
 
         // Update the user's password
-        user.password = hashedPassword;
+        user.password = newPassword;
 
         await user.save();
 
