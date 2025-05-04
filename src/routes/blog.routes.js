@@ -5,11 +5,12 @@ const { getAllBlogs, getAllBlogsWithPagination, getBlogsByCategory, getBlogsByAu
 
 const { checkBlacklistToken } = require('../middlewares/blacklistToken.middleware');
 const { authenticate } = require('../middlewares/verifyJWT.middleware');
+const userSuspendMiddleware = require('../middlewares/userSuspend.middleware');
 
 const router = express.Router();
 
 // Route to create a new blog
-router.post('/create-blog', checkBlacklistToken, authenticate, createBlog);
+router.post('/create-blog', checkBlacklistToken, authenticate,userSuspendMiddleware, createBlog);
 // Route to get all blogs
 router.get('/all-blog', getAllBlogs);
 // Route to get all blogs with pagination
@@ -18,11 +19,8 @@ router.get('/all-blog/pagination', getAllBlogsWithPagination);
 router.get('/category/:category', getBlogsByCategory);
 // Route to get all blogs by author
 router.get('/author/:authorId', getBlogsByAuthor);
-
-
 // Route to get a single blog by ID
 router.get('/single-blog/:id', getSingleBlog);
-
 // Route to get popular blogs
 router.get('/popular-blogs', getPopularBlogs);
 // Route to get all categories

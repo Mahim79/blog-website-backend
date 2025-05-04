@@ -5,12 +5,16 @@ const { checkBlacklistToken } = require('../middlewares/blacklistToken.middlewar
 const userDeleteController = require('../controllers/user/userDelete.controller');
 const adminOnly = require('../middlewares/admin.middleware');
 const getUserDetailsController = require('../controllers/user/getUserDetails.controller');
+const userSuspendMiddleware = require('../middlewares/userSuspend.middleware');
+const { getTopAuthors } = require('../controllers/user/getTopAuthors.controller');
 
 const router = express.Router();
 // Get user details route
-router.get('/details/:id',  getUserDetailsController);
+router.get('/details/:id', getUserDetailsController);
+// get top authors 
+router.get('/top-authors', getTopAuthors);
 // Update user route
-router.put('/update/:id', checkBlacklistToken, authenticate, userUpdateController);
+router.put('/update/:id', checkBlacklistToken, authenticate,userSuspendMiddleware, userUpdateController);
 //suspend user route
 router.put('/suspend/:id', checkBlacklistToken, authenticate, adminOnly, userSuspendController);
 

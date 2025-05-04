@@ -56,7 +56,7 @@ const getAllBlogsWithPagination = async (req, res) => {
 const getBlogsByCategory = async (req, res) => {
     try {
         const { category } = req.params;
-        const blogs = await Blog.find({ isDeleted: false }, { category });
+        const blogs = await Blog.find( { category },{ isDeleted: false });
         if (blogs.length === 0) {
             return res.status(404).json({ success: false, message: 'No blogs found for this category' });
         }
