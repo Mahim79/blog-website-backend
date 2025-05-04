@@ -4,9 +4,11 @@ const { authenticate } = require('../middlewares/verifyJWT.middleware');
 const { checkBlacklistToken } = require('../middlewares/blacklistToken.middleware');
 const userDeleteController = require('../controllers/user/userDelete.controller');
 const adminOnly = require('../middlewares/admin.middleware');
+const getUserDetailsController = require('../controllers/user/getUserDetails.controller');
 
 const router = express.Router();
-
+// Get user details route
+router.get('/details/:id',  getUserDetailsController);
 // Update user route
 router.put('/update/:id', checkBlacklistToken, authenticate, userUpdateController);
 //suspend user route
