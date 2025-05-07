@@ -133,11 +133,26 @@ const getSingleBlog = async (req, res) => {
             return res.status(404).json({ success: false, message: 'Blog not found' });
         }
         if (blog.isDeleted) {
-            return res.status(404).json({ success: false, message: 'Blog not found' });
+            return res.status(404).json({ success: false, message: 'This Blog is Suspended' });
         }
 
         res.status(200).json({ success: true, data: blog });
     } catch (error) {
+        res.status(500).json({ success: false, message: 'Server Error', error: error.message });
+    }
+};
+// Controller to get single blog for admin
+const getSingleBlogForAdmin = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const blog = await Blog.findById(id);
+        if (!blog) {
+            return res.status(404).json({ success: false, message: 'Blog not found' });
+        }
+       
+        res.status(200).json({ success: true, data: blog });
+    }
+    catch (error) {
         res.status(500).json({ success: false, message: 'Server Error', error: error.message });
     }
 };
@@ -204,6 +219,7 @@ module.exports = {
     getSingleBlog,
     getAllBlogsWithPaginationForAdmin,
     getPopularBlogs,
-    getAllCategories
+    getAllCategories,
+    getSingleBlogForAdmin
 
 };
