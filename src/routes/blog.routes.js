@@ -7,6 +7,8 @@ const { checkBlacklistToken } = require('../middlewares/blacklistToken.middlewar
 const { authenticate } = require('../middlewares/verifyJWT.middleware');
 const userSuspendMiddleware = require('../middlewares/userSuspend.middleware');
 const adminOnly = require('../middlewares/admin.middleware');
+const updateBlog = require('../controllers/blog/updateBlog.controller');
+const { deleteBlog, softDeleteBlog } = require('../controllers/blog/deleteBlog.controller');
 
 const router = express.Router();
 
@@ -31,6 +33,14 @@ router.get('/popular-blogs', getPopularBlogs);
 // Route to get all categories
 router.get('/categories', getAllCategories);
 
+//update blog
+router.put('/update-blog/:id', checkBlacklistToken, authenticate, userSuspendMiddleware, updateBlog);
+
+//soft delete blog
+router.put('/soft-delete-blog/:id', checkBlacklistToken, authenticate, userSuspendMiddleware, softDeleteBlog);
+
+//delete blog for admin 
+router.delete('/delete-blog/:id', checkBlacklistToken, authenticate, adminOnly, deleteBlog);
 
 
 
