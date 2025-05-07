@@ -1,11 +1,12 @@
 const express = require('express');
 
 const createBlog = require('../controllers/blog/createBlog.controller');
-const { getAllBlogs, getAllBlogsWithPagination, getBlogsByCategory, getBlogsByAuthor, getBlogsWithCommentsAndLikes, getSingleBlog, getSingleBlogWithCommentsAndLikes, getPopularBlogs, getAllCategories } = require('../controllers/blog/getBlogs.controller');
+const { getAllBlogs, getAllBlogsWithPagination, getBlogsByCategory, getBlogsByAuthor, getBlogsWithCommentsAndLikes, getSingleBlog, getSingleBlogWithCommentsAndLikes, getAllBlogsWithPaginationForAdmin, getPopularBlogs, getAllCategories } = require('../controllers/blog/getBlogs.controller');
 
 const { checkBlacklistToken } = require('../middlewares/blacklistToken.middleware');
 const { authenticate } = require('../middlewares/verifyJWT.middleware');
 const userSuspendMiddleware = require('../middlewares/userSuspend.middleware');
+const adminOnly = require('../middlewares/admin.middleware');
 
 const router = express.Router();
 
@@ -15,6 +16,8 @@ router.post('/create-blog', checkBlacklistToken, authenticate,userSuspendMiddlew
 router.get('/all-blog', getAllBlogs);
 // Route to get all blogs with pagination
 router.get('/all-blog/pagination', getAllBlogsWithPagination);
+// Route to get all blogs with pagination for admin
+router.get('/all-blog/pagination/admin',checkBlacklistToken, authenticate,adminOnly, getAllBlogsWithPaginationForAdmin);
 // Route to get all blogs by category
 router.get('/category/:category', getBlogsByCategory);
 // Route to get all blogs by author

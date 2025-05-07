@@ -52,6 +52,48 @@ const getAllBlogsWithPagination = async (req, res) => {
         res.status(500).json({ success: false, message: 'Server Error', error: error.message });
     }
 };
+// Controller to get all blogs with pagination for admin
+const getAllBlogsWithPaginationForAdmin = async (req, res) => {
+    try {
+        let { page = 1, limit = 10 } = req.query;
+
+
+        // Convert to numbers
+        page = Number(page);
+        limit = Number(limit);
+
+        // Validate that page and limit are positive integers
+        if (isNaN(page) || page <= 0 || isNaN(limit) || limit <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: 'Page and limit must be positive numbers.'
+            });
+        }
+
+        const blogs = await Blog.find()
+            .skip((page - 1) * limit)
+            .limit(limit)
+            .sort({ createdAt: -1 });
+
+        const totalBlogs = await Blog.countDocuments();
+        const totalPages = Math.ceil(totalBlogs / limit);
+
+        res.status(200).json({
+            success: true,
+            pagination: {
+                totalBlogs,
+                totalPages,
+                currentPage: Number(page),
+                limit: Number(limit),
+            },
+            data: blogs,
+
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server Error', error: error.message });
+    }
+}
+
 // Controller to get all blogs by category
 const getBlogsByCategory = async (req, res) => {
     try {
@@ -159,9 +201,8 @@ module.exports = {
     getAllBlogsWithPagination,
     getBlogsByCategory,
     getBlogsByAuthor,
-    
     getSingleBlog,
-    
+    getAllBlogsWithPaginationForAdmin,
     getPopularBlogs,
     getAllCategories
 
