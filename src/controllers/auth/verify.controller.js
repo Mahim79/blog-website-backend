@@ -17,14 +17,15 @@ const emailVerifyController = async (req, res) => {
         if (!userDetails) {
             return res.status(404).json({ success: false, message: 'User not found.' });
         }
+        if (userDetails.isVerified) {
+            return res.status(400).json({ success: false, message: 'Email already verified.' });
+        }
 
         if (userDetails.verificationCode !== token) {
             return res.status(400).json({ success: false, message: 'Invalid verification code.' });
         }
 
-        if (userDetails.isVerified) {
-            return res.status(400).json({ success: false, message: 'Email already verified.' });
-        }
+       
         // Update user verification status
         userDetails.isVerified = true;
         userDetails.verificationCode = undefined; // Clear the verification code after successful verification
