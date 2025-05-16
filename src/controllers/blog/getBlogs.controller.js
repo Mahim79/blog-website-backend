@@ -15,6 +15,8 @@ const getAllBlogs = async (req, res) => {
 const getAllBlogsWithPagination = async (req, res) => {
     try {
         let { page = 1, limit = 10 } = req.query;
+        
+
 
 
         // Convert to numbers
@@ -98,7 +100,7 @@ const getAllBlogsWithPaginationForAdmin = async (req, res) => {
 const getBlogsByCategory = async (req, res) => {
     try {
         const { category } = req.params;
-        const blogs = await Blog.find( { category },{ isDeleted: false });
+        const blogs = await Blog.find({ category }, { isDeleted: false });
         if (blogs.length === 0) {
             return res.status(404).json({ success: false, message: 'No blogs found for this category' });
         }
@@ -149,7 +151,7 @@ const getSingleBlogForAdmin = async (req, res) => {
         if (!blog) {
             return res.status(404).json({ success: false, message: 'Blog not found' });
         }
-       
+
         res.status(200).json({ success: true, data: blog });
     }
     catch (error) {

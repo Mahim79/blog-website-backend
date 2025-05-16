@@ -8,9 +8,15 @@ const getLikesByBlogId = async (req, res) => {
             return res.status(400).json({ message: 'Blog ID is required' });
         }
 
-        const likesCount = await Like.countDocuments({ blog: blogId, action: true });
+        const likes = await Like.find({ blog: blogId, action: true });
+        // Extract user IDs from the likes
+        const userIds = likes.map((like) => like.user);
 
-        res.status(200).json({ blogId, likesCount });
+        res.status(200).json({
+            blogId,
+            totalLikes: likes.length,
+            userIds,
+        });
     } catch (error) {
         console.error('Error fetching likes:', error);
         res.status(500).json({ message: 'Internal server error' });
